@@ -139,8 +139,8 @@ operations = [Left(),
 
 # Define the examples
 left_examples = [
-    ({'x': 'hello', 'y': ''}, 'h'),
-    ({'x': 'world', 'y': ''}, 'w'),
+    ({'x': 'hello'}, 'h'),
+    ({'x': 'world'}, 'w'),
 ]
 
 right_examples = [
@@ -190,7 +190,10 @@ def synthesize_program(examples, program_bank, levels):
 
                 for i, child in enumerate(children):
                     if isinstance(child, tuple):
-                        instance = child[0]()
+                        instance = child[0]
+
+                        if callable(instance):
+                            instance = child[0]()
 
                         if instance.return_type != operation.args()[i]:
                             all_arg_types_match = False

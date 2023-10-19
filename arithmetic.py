@@ -212,7 +212,10 @@ def synthesize_program(examples, program_bank, levels):
 
                 for i, child in enumerate(children):
                     if isinstance(child, tuple):
-                        instance = child[0]()
+                        
+                        instance = child[0]
+                        if callable(instance):
+                            instance = child[0]()
 
                         if instance.return_type != operation.args()[i]:
                             all_arg_types_match = False
@@ -267,7 +270,7 @@ if (final_program is not None):
 program_bank = []
 
 # Subtract
-final_program = synthesize_program(sub_examples, program_bank, 3)
+final_program = synthesize_program(sub_examples, program_bank, 2)
 if (final_program is not None):
     output = render_program(final_program)
     print("output", output)
