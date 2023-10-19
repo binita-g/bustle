@@ -18,4 +18,4 @@ Lastly, we evaluate to check with synthesized programs match the output of the c
 To run, please run python arithmetic.py
 
 ## String Manipulation
-To run, please run python string.py
+To run, please run python string_manipulation.py
