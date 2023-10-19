@@ -153,11 +153,6 @@ concat_examples = [
     ({'x': 'world', 'y': 'domination'}, 'worlddomination'),
 ]
 
-add_examples = [
-    ({'x': 1, 'y': 2}, 3),
-    ({'x': 2, 'y': 4}, 6),
-]
-
 constants = [(StrConstant, [' '])]
 
 program_bank = []
