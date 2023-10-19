@@ -170,6 +170,25 @@ def __init__level__one(examples):
     
     program_bank.extend(constants)
 
+# Check equivalent
+def functionally_equivalent(program1, level_program_bank, examples):
+    op1, children1 = program1
+
+    if len(level_program_bank) == 0: 
+        return False
+
+    for program2 in level_program_bank:
+        op2, children2 = program2
+
+        for example in examples:
+            result1 = op1.calc(*(example[0].values()))
+            result2 = op2.calc(*(example[0].values()))
+
+            if result1 != result2:
+                return False
+
+    return True
+
 # Recursive function for program synthesis
 def synthesize_program(examples, program_bank, levels):
     __init__level__one(examples)
@@ -197,7 +216,8 @@ def synthesize_program(examples, program_bank, levels):
                             all_arg_types_match = False
 
                 if all_arg_types_match:
-                    level_program_bank.append((operation, children))
+                    if not functionally_equivalent((operation, children), level_program_bank, examples):
+                        level_program_bank.append((operation, children))
 
         program_bank.extend(level_program_bank)
 
@@ -237,4 +257,5 @@ final_program = synthesize_program(concat_examples, program_bank, 3)
 if (final_program is not None):
     output = render_program(final_program)
     print("output", output)
-    print("number of programs", len(final_program))
+
+program_bank = []

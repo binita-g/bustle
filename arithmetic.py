@@ -53,6 +53,21 @@ class Multiply:
     def calc(self, x, y) -> int:
         return x*y
 
+# Class for divide
+class Divide:
+    def __init__(self):
+        self.args_count = 2
+        self.return_type = int
+
+    def args(self):
+        return [int, int]
+
+    def str(self, x, y) -> int:
+         return f"Divide({x}, {y})"
+    
+    def calc(self, x, y) -> int:
+        return x // y
+
 # Class for first letter (Left(S, I))
 class Left:
     def __init__(self):
@@ -147,24 +162,11 @@ class IntConstant:
         return value
 
 operations = [Add(),
-              Subtract(),]
+              Subtract(),
+              Multiply(),
+              Divide()]
 
 # Define the examples
-left_examples = [
-    ({'x': 'hello'}, 'h'),
-    ({'x': 'world'}, 'w'),
-]
-
-right_examples = [
-    ({'x': 'hello'}, 'o'),
-    ({'x': 'world'}, 'd'),
-]
-
-concat_examples = [
-    ({'x': 'hello', 'y': 'world'}, 'helloworld'),
-    ({'x': 'world', 'y': 'domination'}, 'worlddomination'),
-]
-
 add_examples = [
     ({'x': 1, 'y': 2}, 3),
     ({'x': 2, 'y': 4}, 6),
@@ -177,7 +179,12 @@ sub_examples = [
 
 mult_examples = [
     ({'x': 4, 'y': 2}, 8),
-    ({'x': 7, 'y': 6}, 42),
+    ({'x': 2, 'y': 5}, 10),
+]
+
+div_examples = [
+    ({'x': 10, 'y': 2}, 5),
+    ({'x': 6, 'y': 2}, 3),
 ]
 
 constants = [(IntConstant, [1])]
@@ -197,11 +204,30 @@ def __init__level__one(examples):
     
     program_bank.extend(constants)
 
+# Check equivalent
+def functionally_equivalent(program1, level_program_bank, examples):
+    op1, children1 = program1
+
+    if len(level_program_bank) == 0: 
+        return False
+
+    for program2 in level_program_bank:
+        op2, children2 = program2
+
+        for example in examples:
+            result1 = op1.calc(*(example[0].values()))
+            result2 = op2.calc(*(example[0].values()))
+
+            if result1 != result2:
+                return False
+
+    return True
+
 # Recursive function for program synthesis
 def synthesize_program(examples, program_bank, levels):
     __init__level__one(examples)
 
-    for i in range(levels):
+    for level in range(levels):
         level_program_bank = []
 
         for operation in operations:
@@ -224,8 +250,9 @@ def synthesize_program(examples, program_bank, levels):
                             all_arg_types_match = False
 
                 if all_arg_types_match:
-                    level_program_bank.append((operation, children))
-
+                    if not functionally_equivalent((operation, children), level_program_bank, examples):
+                        level_program_bank.append((operation, children))
+                
         program_bank.extend(level_program_bank)
 
         # Check if any of the synthesized programs match the output of the current example
@@ -233,15 +260,15 @@ def synthesize_program(examples, program_bank, levels):
             op, children = program
 
             # Extract the values from the examples as inputs
-            all_programs = True
+            program_works = True
 
             for example in examples:
                 result = op.calc(*(example[0].values()))
 
                 if result != example[1]:
-                    all_programs = False
+                    program_works = False
                     
-            if all_programs:
+            if program_works:
                 return op, children
 
     # If no program satisfies the current example, return None
@@ -265,7 +292,6 @@ final_program = synthesize_program(add_examples, program_bank, 3)
 if (final_program is not None):
     output = render_program(final_program)
     print("output", output)
-    print("number of programs", len(final_program))
 
 program_bank = []
 
@@ -274,6 +300,21 @@ final_program = synthesize_program(sub_examples, program_bank, 2)
 if (final_program is not None):
     output = render_program(final_program)
     print("output", output)
-    print("number of programs", len(final_program))
+
+program_bank = []
+
+# Multiply
+final_program = synthesize_program(mult_examples, program_bank, 2)
+if (final_program is not None):
+    output = render_program(final_program)
+    print("output", output)
+
+program_bank = []
+
+# Divide
+final_program = synthesize_program(div_examples, program_bank, 2)
+if (final_program is not None):
+    output = render_program(final_program)
+    print("output", output)
 
 program_bank = []
