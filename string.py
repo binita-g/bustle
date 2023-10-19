@@ -139,8 +139,8 @@ operations = [Left(),
 
 # Define the examples
 left_examples = [
-    ({'x': 'hello'}, 'h'),
-    ({'x': 'world'}, 'w'),
+    ({'x': 'hello', 'y': ''}, 'h'),
+    ({'x': 'world', 'y': ''}, 'w'),
 ]
 
 right_examples = [
