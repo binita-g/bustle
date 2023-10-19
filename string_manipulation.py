@@ -78,7 +78,7 @@ class Concatenate:
         return f"Concatenate({x}, {y})"
     
     def args(self):
-            return [str, str]
+        return [str, str]
 
     def calc(self, x: str, y: str) -> str:
         return x+y
@@ -139,13 +139,13 @@ operations = [Left(),
 
 # Define the examples
 left_examples = [
-    ({'x': 'hello'}, 'h'),
-    ({'x': 'world'}, 'w'),
+    ({'x': 'hello', 'y': 1}, 'h'),
+    ({'x': 'world', 'y': 1}, 'w'),
 ]
 
 right_examples = [
-    ({'x': 'hello'}, 'o'),
-    ({'x': 'world'}, 'd'),
+    ({'x': 'hello', 'y': 1}, 'o'),
+    ({'x': 'world', 'y': 1}, 'd'),
 ]
 
 concat_examples = [
@@ -216,8 +216,8 @@ def synthesize_program(examples, program_bank, levels):
                             all_arg_types_match = False
 
                 if all_arg_types_match:
-                    if not functionally_equivalent((operation, children), level_program_bank, examples):
-                        level_program_bank.append((operation, children))
+                    # if not functionally_equivalent((operation, children), level_program_bank, examples):
+                    level_program_bank.append((operation, children))
 
         program_bank.extend(level_program_bank)
 
@@ -254,6 +254,20 @@ def render_program(program):
 
 # String Manipulation
 final_program = synthesize_program(concat_examples, program_bank, 3)
+if (final_program is not None):
+    output = render_program(final_program)
+    print("output", output)
+
+program_bank = []
+
+final_program = synthesize_program(left_examples, program_bank, 3)
+if (final_program is not None):
+    output = render_program(final_program)
+    print("output", output)
+
+program_bank = []
+
+final_program = synthesize_program(right_examples, program_bank, 3)
 if (final_program is not None):
     output = render_program(final_program)
     print("output", output)
