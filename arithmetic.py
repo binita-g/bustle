@@ -212,7 +212,6 @@ def synthesize_program(examples, program_bank, levels):
 
                 for i, child in enumerate(children):
                     if isinstance(child, tuple):
-                        print('instance', child)
                         instance = child[0]()
 
                         if instance.return_type != operation.args()[i]:
