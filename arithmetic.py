@@ -38,6 +38,21 @@ class Subtract:
     def calc(self, x, y) -> int:
         return x-y
 
+# Class for multiply
+class Multiply:
+    def __init__(self):
+        self.args_count = 2
+        self.return_type = int
+
+    def args(self):
+        return [int, int]
+
+    def str(self, x, y) -> int:
+         return f"Multiply({x}, {y})"
+    
+    def calc(self, x, y) -> int:
+        return x*y
+
 # Class for first letter (Left(S, I))
 class Left:
     def __init__(self):
@@ -155,6 +170,16 @@ add_examples = [
     ({'x': 2, 'y': 4}, 6),
 ]
 
+sub_examples = [
+    ({'x': 4, 'y': 2}, 2),
+    ({'x': 7, 'y': 6}, 1),
+]
+
+mult_examples = [
+    ({'x': 4, 'y': 2}, 8),
+    ({'x': 7, 'y': 6}, 42),
+]
+
 constants = [(IntConstant, [1])]
 
 program_bank = []
@@ -187,6 +212,7 @@ def synthesize_program(examples, program_bank, levels):
 
                 for i, child in enumerate(children):
                     if isinstance(child, tuple):
+                        print('instance', child)
                         instance = child[0]()
 
                         if instance.return_type != operation.args()[i]:
@@ -232,8 +258,20 @@ def render_program(program):
         return op.str(*(render_program(child) for child in children))
 
 # Arithmetic
+# Add
 final_program = synthesize_program(add_examples, program_bank, 3)
 if (final_program is not None):
     output = render_program(final_program)
     print("output", output)
     print("number of programs", len(final_program))
+
+program_bank = []
+
+# Subtract
+final_program = synthesize_program(sub_examples, program_bank, 3)
+if (final_program is not None):
+    output = render_program(final_program)
+    print("output", output)
+    print("number of programs", len(final_program))
+
+program_bank = []
